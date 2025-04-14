@@ -1,5 +1,6 @@
 package com.zai.weather.client;
 
+import com.zai.weather.exception.ApiDownException;
 import com.zai.weather.model.WeatherResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,6 @@ public class WeatherProviderSubject {
                 log.info( "failed {}, try fetching next ...",observer.getName());
             }
         }
-        throw new RuntimeException("All providers failed.");
+        throw new ApiDownException("Both weather APIs are currently unavailable. Please try again later.");
     }
 }

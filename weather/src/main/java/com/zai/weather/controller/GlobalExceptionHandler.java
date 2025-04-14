@@ -1,6 +1,7 @@
 package com.zai.weather.controller;
 
 import com.zai.weather.dto.ErrorResponse;
+import com.zai.weather.exception.ApiDownException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -13,10 +14,7 @@ import org.springframework.web.client.HttpClientErrorException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleAllExceptions(
-            Exception ex,
-            HttpServletRequest request
-    ) {
+    public ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal Server Error",
@@ -27,10 +25,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleRuntimeException(
-            RuntimeException ex,
-            HttpServletRequest request
-    ) {
+    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Bad Request",
@@ -41,12 +36,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpClientErrorException.class)
-    public ResponseEntity<ErrorResponse> handleHttpClientError(
-            HttpClientErrorException ex,
-            HttpServletRequest request
-    ) {
-        HttpStatusCode status = ex.getStatusCode();
+    public ResponseEntity<ErrorResponse> handleHttpClientError(HttpClientErrorException ex) {
 
+        HttpStatusCode status = ex.getStatusCode();
         ErrorResponse error = new ErrorResponse(
                 status.value(),
                 "Client Error",
@@ -57,15 +49,26 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<ErrorResponse> handleHttpClientError(
-            NullPointerException ex,
-            HttpServletRequest request
-    ) {
+    public ResponseEntity<ErrorResponse> handleHttpClientError(NullPointerException ex) {
+
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Client Error",
                 ex.getMessage()
         );
+
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ApiDownException.class)
+    public ResponseEntity<ErrorResponse> handleApiDownException(ApiDownException ex) {
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_GATEWAY.value(),
+                "Service Unavilable",
+                ex.getMessage()
+        );
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_GATEWAY);
     }
 }

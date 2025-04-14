@@ -3,12 +3,14 @@ package com.zai.weather.service;
 import com.zai.weather.cache.WeatherCache;
 import com.zai.weather.client.WeatherObserver;
 import com.zai.weather.client.WeatherProviderSubject;
+import com.zai.weather.exception.ApiDownException;
 import com.zai.weather.model.WeatherResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -30,6 +32,13 @@ public class WeatherService {
     }
 
     public WeatherResponse getWeather(String city) {
+
+        Optional.ofNullable(city)
+                .ifPresentOrElse(
+                        c -> {},
+                        () -> { throw new NullPointerException("City can't be null"); }
+                );
+
         WeatherResponse cached = cache.get(city);
         if (cached != null) return cached;
 
@@ -41,7 +50,7 @@ public class WeatherService {
             WeatherResponse stale = cache.getStale(city);
             if (stale != null) return stale;
             log.error("All providers failed and no cached data available.");
-            throw new RuntimeException("All providers failed and no cached data available.");
+            throw new ApiDownException("All providers failed and no cached data available.");
         }
     }
 }

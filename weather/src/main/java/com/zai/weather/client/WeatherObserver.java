@@ -1,8 +1,8 @@
-package com.zai.weather.client;
+    package com.zai.weather.client;
 
-import com.zai.weather.model.WeatherResponse;
+    import com.zai.weather.model.WeatherResponse;
 
-public interface WeatherObserver {
-    WeatherResponse fetchWeather(String city) throws Exception;
-    String getName();
-}
+    public interface WeatherObserver {
+        WeatherResponse fetchWeather(String city) throws Exception;
+        String getName();
+    }

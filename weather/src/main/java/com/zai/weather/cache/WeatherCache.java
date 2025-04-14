@@ -1,4 +1,3 @@
-// File: WeatherCache.java
 package com.zai.weather.cache;
 
 import com.zai.weather.model.WeatherResponse;
