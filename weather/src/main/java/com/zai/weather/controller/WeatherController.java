@@ -9,13 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class WeatherController {
-
-    private final WeatherService weatherService;
-
     @Autowired
-    public WeatherController(WeatherService weatherService) {
-        this.weatherService = weatherService;
-    }
+    WeatherService weatherService;
 
     @GetMapping("/v1/weather")
     public WeatherResponse getWeather(@RequestParam(value = "city", defaultValue = "melbourne") String city) {
