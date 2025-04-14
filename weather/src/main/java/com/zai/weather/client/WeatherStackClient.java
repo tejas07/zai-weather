@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
+
 @Component
 @Slf4j
 public class WeatherStackClient implements WeatherObserver {
@@ -21,14 +23,14 @@ public class WeatherStackClient implements WeatherObserver {
     public WeatherResponse fetchWeather(String city) {
         log.info("WeatherStackClient executing...");
 
-      /*  String url = String.format("http://api.weatherstack.com/current?access_key=%s&query=%s", apiKey, city);
+        String url = String.format("http://api.weatherstack.com/current?access_key=%s&query=%s", apiKey, city);
         Map<String, Object> response = restTemplate.getForObject(url, Map.class);
         if (response != null && response.get("current") != null) {
             Map<String, Object> current = (Map<String, Object>) response.get("current");
             double temp = ((Number) current.get("temperature")).doubleValue();
             double wind = ((Number) current.get("wind_speed")).doubleValue();
             return new WeatherResponse(wind, temp);
-        }*/
+        }
         throw new HttpClientErrorException(HttpStatusCode.valueOf(400));
     }
 
