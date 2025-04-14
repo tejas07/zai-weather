@@ -2,7 +2,6 @@ package com.zai.weather.controller;
 
 import com.zai.weather.dto.ErrorResponse;
 import com.zai.weather.exception.ApiDownException;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
