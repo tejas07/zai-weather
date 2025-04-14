@@ -1,6 +1,6 @@
 # 🌦️ Zai Weather API
 
-A Spring Boot application that provides real-time weather data for **Melbourne** using:
+A Spring Boot application that provides real-time weather data for default city as **Melbourne** using:
 
 - **Primary API:** [WeatherStack](https://weatherstack.com/)
 - **Failover API:** [OpenWeatherMap](https://openweathermap.org/api)
@@ -10,10 +10,10 @@ A Spring Boot application that provides real-time weather data for **Melbourne**
 
 ## 🚀 Features
 
-- Fetches current weather for Melbourne.
+- Fetches current weather for any city but default to Melbourne.
 - Automatic failover to OpenWeatherMap if WeatherStack fails.
 - Redis-based caching for performance (can be disabled).
-- Clean and modular Spring Boot structure.
+- Implemented using Observer design pattern.
 - Simple REST endpoint:
 
 
@@ -22,7 +22,7 @@ A Spring Boot application that provides real-time weather data for **Melbourne**
 ## 🧰 Tech Stack
 
 - Java 17  
-- Spring Boot 3.4.x  
+- Spring Boot 3.4.4
 - Spring Web, Spring Data Redis  
 - SLF4J + Logback  
 - Maven  
