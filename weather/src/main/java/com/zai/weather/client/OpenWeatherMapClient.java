@@ -19,13 +19,13 @@ public class OpenWeatherMapClient implements WeatherObserver {
 
     @Override
     public WeatherResponse fetchWeather(String city) {
-        /*String url = String.format("http://api.openweathermap.org/data/2.5/weather?q=%s,AU&appid=%s&units=metric", city, apiKey);
+        String url = String.format("http://api.openweathermap.org/data/2.5/weather?q=%s,AU&appid=%s&units=metric", city, apiKey);
         Map<String, Object> response = restTemplate.getForObject(url, Map.class);
         if (response != null && response.get("main") != null && response.get("wind") != null) {
             double temp = ((Number) ((Map<String, Object>) response.get("main")).get("temp")).doubleValue();
             double wind = ((Number) ((Map<String, Object>) response.get("wind")).get("speed")).doubleValue();
             return new WeatherResponse(wind, temp);
-        }*/
+        }
         throw new HttpClientErrorException(HttpStatusCode.valueOf(400));
     }
 
