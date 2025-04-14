@@ -3,7 +3,9 @@ package com.zai.weather.client;
 import com.zai.weather.model.WeatherResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -27,7 +29,7 @@ public class WeatherStackClient implements WeatherObserver {
             double wind = ((Number) current.get("wind_speed")).doubleValue();
             return new WeatherResponse(wind, temp);
         }*/
-        throw new RuntimeException("Invalid response from WeatherStack");
+        throw new HttpClientErrorException(HttpStatusCode.valueOf(400));
     }
 
     @Override
