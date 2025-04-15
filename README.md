@@ -1,4 +1,4 @@
-# 🌦️ Zai Weather API
+# 🌦️ Weather API
 
 A Spring Boot application that provides real-time weather data for default city as **Melbourne** using:
 
