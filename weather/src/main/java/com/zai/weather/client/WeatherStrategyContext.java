@@ -10,20 +10,20 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class WeatherProviderSubject {
+public class WeatherStrategyContext {
 
-    private final List<WeatherObserver> observers = new ArrayList<>();
+    private final List<WeatherStrategy> strategies = new ArrayList<>();
 
-    public void attach(WeatherObserver observer) {
-        observers.add(observer);
+    public void attach(WeatherStrategy strategy) {
+        strategies.add(strategy);
     }
 
-    public WeatherResponse notifyObservers(String city) {
-        for (WeatherObserver observer : observers) {
+    public WeatherResponse getWeather(String city) {
+        for (WeatherStrategy strategy : strategies) {
             try {
-                return observer.fetchWeather(city);
+                return strategy.fetch(city);
             } catch (Exception e) {
-                log.info( "failed {}, try fetching next ...",observer.getName());
+                log.error( "failed {} due to {}",strategy.getName(), e.getMessage());
             }
         }
         throw new ApiDownException("Both weather APIs are currently unavailable. Please try again later.");

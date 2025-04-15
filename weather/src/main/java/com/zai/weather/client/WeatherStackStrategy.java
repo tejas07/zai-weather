@@ -3,16 +3,16 @@ package com.zai.weather.client;
 import com.zai.weather.model.WeatherResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
 @Component
 @Slf4j
-public class WeatherStackClient implements WeatherObserver {
+@Primary
+public class WeatherStackStrategy implements WeatherStrategy {
 
     @Value("${weatherstack.api.key}")
     private String apiKey;
@@ -20,7 +20,7 @@ public class WeatherStackClient implements WeatherObserver {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
-    public WeatherResponse fetchWeather(String city) {
+    public WeatherResponse fetch(String city) {
         log.info("WeatherStackClient executing...");
 
         String url = String.format("http://api.weatherstack.com/current?access_key=%s&query=%s", apiKey, city);
@@ -31,7 +31,7 @@ public class WeatherStackClient implements WeatherObserver {
             double wind = ((Number) current.get("wind_speed")).doubleValue();
             return new WeatherResponse(wind, temp);
         }
-        throw new HttpClientErrorException(HttpStatusCode.valueOf(400));
+        throw new RuntimeException("WeatherStack is down");
     }
 
     @Override
