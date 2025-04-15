@@ -14,6 +14,7 @@ A Spring Boot application that provides real-time weather data for default city 
 - Automatic failover to OpenWeatherMap if WeatherStack fails.
 - Redis-based caching for performance (can be disabled).
 - Implemented using Strategy design pattern.
+- Circut Breaker Pattern Resilence4j is used.
 - Simple REST endpoint:
 
 
