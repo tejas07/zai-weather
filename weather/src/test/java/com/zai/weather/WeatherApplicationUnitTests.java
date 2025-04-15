@@ -1,8 +1,8 @@
 package com.zai.weather;
 
 import com.zai.weather.cache.WeatherCache;
-import com.zai.weather.client.WeatherObserver;
-import com.zai.weather.client.WeatherProviderSubject;
+import com.zai.weather.client.WeatherStrategy;
+import com.zai.weather.client.WeatherStrategyContext;
 import com.zai.weather.exception.ApiDownException;
 import com.zai.weather.model.WeatherResponse;
 import com.zai.weather.service.WeatherService;
@@ -18,17 +18,17 @@ import static org.mockito.Mockito.when;
 
 public class WeatherApplicationUnitTests {
 
-	private WeatherObserver weatherStack;
-	private WeatherObserver openWeatherMap;
-	private WeatherProviderSubject subject;
+	private WeatherStrategy weatherStack;
+	private WeatherStrategy openWeatherMap;
+	private WeatherStrategyContext subject;
 	private WeatherCache cache;
 	private WeatherService weatherService;
 
 	@BeforeEach
 	public void setup() {
-		weatherStack = mock(WeatherObserver.class);
-		openWeatherMap = mock(WeatherObserver.class);
-		subject = new WeatherProviderSubject();
+		weatherStack = mock(WeatherStrategy.class);
+		openWeatherMap = mock(WeatherStrategy.class);
+		subject = new WeatherStrategyContext();
 		subject.attach(weatherStack);
 		subject.attach(openWeatherMap);
 		cache = mock(WeatherCache.class);
@@ -38,9 +38,9 @@ public class WeatherApplicationUnitTests {
 	@Test
 	public void testPrimaryApiDown_SecondaryWorks() throws Exception {
 		String city = "melbourne";
-		when(weatherStack.fetchWeather(city)).thenThrow(new RuntimeException("WeatherStack Down"));
+		when(weatherStack.fetch(city)).thenThrow(new RuntimeException("WeatherStack Down"));
 		WeatherResponse response = new WeatherResponse(10.0, 22.0);
-		when(openWeatherMap.fetchWeather(city)).thenReturn(response);
+		when(openWeatherMap.fetch(city)).thenReturn(response);
 
 		WeatherResponse result = weatherService.getWeather(city);
 
@@ -52,9 +52,9 @@ public class WeatherApplicationUnitTests {
 	public void testSecondaryApiDown_PrimaryWorks() throws Exception {
 		String city = "melbourne";
 		WeatherResponse response = new WeatherResponse(8.0, 18.5);
-			when(weatherStack.fetchWeather(city)).thenReturn(response);
+			when(weatherStack.fetch(city)).thenReturn(response);
 
-		when(openWeatherMap.fetchWeather(city)).thenThrow(new RuntimeException(" OpenWeatherMap should not be called"));
+		when(openWeatherMap.fetch(city)).thenThrow(new RuntimeException(" OpenWeatherMap should not be called"));
 
 		WeatherResponse result = weatherService.getWeather(city);
 
@@ -65,8 +65,8 @@ public class WeatherApplicationUnitTests {
 	@Test
 	public void testBothApisDown_ThrowsApiDownException() throws Exception {
 		String city = "melbourne";
-		when(weatherStack.fetchWeather(city)).thenThrow(new RuntimeException("Weather Stack down"));
-		when(openWeatherMap.fetchWeather(city)).thenThrow(new RuntimeException("Open Weather map down"));
+		when(weatherStack.fetch(city)).thenThrow(new RuntimeException("Weather Stack down"));
+		when(openWeatherMap.fetch(city)).thenThrow(new RuntimeException("Open Weather map down"));
 
 		assertThrows(ApiDownException.class, () -> weatherService.getWeather(city));
 	}

@@ -1,8 +1,8 @@
 package com.zai.weather.service;
 
 import com.zai.weather.cache.WeatherCache;
-import com.zai.weather.client.WeatherObserver;
-import com.zai.weather.client.WeatherProviderSubject;
+import com.zai.weather.client.WeatherStrategy;
+import com.zai.weather.client.WeatherStrategyContext;
 import com.zai.weather.exception.ApiDownException;
 import com.zai.weather.model.WeatherResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -16,19 +16,19 @@ import java.util.Optional;
 @Slf4j
 public class WeatherService {
 
-    private final WeatherProviderSubject providerSubject;
-    private final List<WeatherObserver> observers;
+    private final WeatherStrategyContext strategyContext;
+    private final List<WeatherStrategy> strategies;
     private final WeatherCache cache;
 
-    public WeatherService(WeatherProviderSubject providerSubject, List<WeatherObserver> observers, WeatherCache cache) {
-        this.providerSubject = providerSubject;
-        this.observers = observers;
+    public WeatherService(WeatherStrategyContext strategyContext, List<WeatherStrategy> strategies, WeatherCache cache) {
+        this.strategyContext = strategyContext;
+        this.strategies = strategies;
         this.cache = cache;
     }
 
     @PostConstruct
     public void initObservers() {
-        observers.forEach(providerSubject::attach);
+        strategies.forEach(strategyContext::attach);
     }
 
     public WeatherResponse getWeather(String city) {
@@ -36,15 +36,15 @@ public class WeatherService {
         Optional.ofNullable(city)
                 .ifPresentOrElse(
                         c -> {},
-                        () -> { throw new NullPointerException("City can't be null"); }
+                        () -> {throw new NullPointerException("City can't be null");}
                 );
 
         WeatherResponse cached = cache.get(city);
         if (cached != null) return cached;
 
         try {
-            WeatherResponse response = providerSubject.notifyObservers(city);
-            cache.set(city,response);
+            WeatherResponse response = strategyContext.getWeather(city);
+            cache.set(city, response);
             return response;
         } catch (Exception e) {
             WeatherResponse stale = cache.getStale(city);

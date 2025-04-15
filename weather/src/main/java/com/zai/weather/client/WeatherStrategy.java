@@ -2,7 +2,7 @@
 
     import com.zai.weather.model.WeatherResponse;
 
-    public interface WeatherObserver {
-        WeatherResponse fetchWeather(String city) throws Exception;
+    public interface WeatherStrategy {
+        WeatherResponse fetch(String city) throws Exception;
         String getName();
     }
