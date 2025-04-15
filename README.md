@@ -13,7 +13,7 @@ A Spring Boot application that provides real-time weather data for default city 
 - Fetches current weather for any city but default to Melbourne.
 - Automatic failover to OpenWeatherMap if WeatherStack fails.
 - Redis-based caching for performance (can be disabled).
-- Implemented using Observer design pattern.
+- Implemented using Strategy design pattern.
 - Simple REST endpoint:
 
 
