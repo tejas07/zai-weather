@@ -39,16 +39,19 @@ public class WeatherService {
                         () -> {throw new NullPointerException("City can't be null");}
                 );
 
-        WeatherResponse cached = cache.get(city);
-        if (cached != null) return cached;
+        log.info("looking into cache for city {}",city);
+
+        //temporarily commenting redis
+       /* WeatherResponse cached = cache.get(city);
+        if (cached != null) return cached;*/
 
         try {
             WeatherResponse response = strategyContext.getWeather(city);
-            cache.set(city, response);
+//            cache.set(city, response);
             return response;
         } catch (Exception e) {
-            WeatherResponse stale = cache.getStale(city);
-            if (stale != null) return stale;
+//            WeatherResponse stale = cache.getStale(city);
+//            if (stale != null) return stale;
             log.error("All providers failed and no cached data available.");
             throw new ApiDownException("All providers failed and no cached data available.");
         }

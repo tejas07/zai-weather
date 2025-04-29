@@ -10,9 +10,7 @@
 	</parent>
 	<groupId>com.zai</groupId>
 	<artifactId>weather</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
-	<name>weather</name>
+	<packaging>jar</packaging>
 	<description>Zai Weather Info</description>
 	<url/>
 	<licenses>
@@ -99,6 +97,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>weather-app</finalName>
 	</build>
 
 </project>
